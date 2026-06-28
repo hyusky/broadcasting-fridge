@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>음료 판매 & 재고 관리 | 동아리 매점</title>
+  <meta name="description" content="동아리 음료 판매 및 재고 관리 시스템. QR코드로 접속하여 간편하게 주문하세요." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- NAV BAR                                     -->
+  <!-- ═══════════════════════════════════════════ -->
+  <nav id="main-nav">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <span class="brand-icon">🧊</span>
+        <span class="brand-text">동아리 매점</span>
+      </div>
+      <div class="nav-tabs">
+        <button id="btn-user-view" class="nav-tab active" onclick="switchView('user')">🛒 주문하기</button>
+        <button id="btn-admin-view" class="nav-tab" onclick="switchView('admin')">🔐 관리자</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- USER VIEW                                   -->
+  <!-- ═══════════════════════════════════════════ -->
+  <main id="user-view" class="view active">
+    <!-- Hero -->
+    <section class="hero">
+      <div class="hero-bg-orb orb-1"></div>
+      <div class="hero-bg-orb orb-2"></div>
+      <div class="hero-content">
+        <h1>🍹 음료 주문</h1>
+        <p class="hero-subtitle">원하는 음료를 선택하고 간편하게 주문하세요!</p>
+      </div>
+    </section>
+
+    <!-- User Name Input -->
+    <section class="section-user-name">
+      <div class="container">
+        <div class="name-input-card glass-card">
+          <label for="input-user-name" class="input-label">
+            <span class="label-icon">👤</span> 주문자 이름
+          </label>
+          <input
+            type="text"
+            id="input-user-name"
+            class="text-input"
+            placeholder="이름을 입력해주세요"
+            autocomplete="off"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Drink Grid -->
+    <section class="section-drinks">
+      <div class="container">
+        <h2 class="section-title">메뉴판</h2>
+        <div id="drink-grid" class="drink-grid">
+          <!-- Populated by JS -->
+        </div>
+        <div id="empty-drinks-msg" class="empty-state" style="display:none;">
+          <span class="empty-icon">📭</span>
+          <p>현재 판매 중인 음료가 없습니다.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- ORDER MODAL                                 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="order-modal" class="modal-overlay" onclick="closeModalOutside(event)">
+    <div class="modal glass-card">
+      <button class="modal-close" onclick="closeOrderModal()" aria-label="닫기">&times;</button>
+      <div class="modal-header">
+        <span class="modal-icon">💳</span>
+        <h3>입금 안내</h3>
+      </div>
+      <div class="modal-body">
+        <div id="modal-drink-info" class="modal-drink-info">
+          <!-- Filled by JS -->
+        </div>
+
+        <!-- Payment Button Section (hidden when price is 0) -->
+        <div id="modal-pay-btn-section" class="transfer-instructions">
+          <div class="transfer-box">
+            <p class="transfer-title">송금 금액</p>
+            <p class="transfer-amount" id="modal-transfer-amount"></p>
+            <button class="btn-pay-transfer" id="btn-transfer" type="button">
+              💸 토스/카카오페이로 송금하기
+            </button>
+            <p class="transfer-note">※ 입금자명을 주문자 이름과 동일하게 해주세요.</p>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-payment-done" class="btn btn-primary btn-glow" onclick="submitOrder()">
+          ✅ 입금 완료
+        </button>
+        <button class="btn btn-ghost" onclick="closeOrderModal()">취소</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- TOAST NOTIFICATION                          -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div id="toast-container"></div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- ADMIN VIEW                                  -->
+  <!-- ═══════════════════════════════════════════ -->
+  <main id="admin-view" class="view">
+    <section class="admin-header">
+      <div class="container">
+        <h1>📊 관리자 대시보드</h1>
+        <p class="admin-subtitle">주문 승인 및 재고를 관리합니다.</p>
+        <div class="admin-stats" id="admin-stats">
+          <!-- Filled by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Order Queue -->
+    <section class="admin-section">
+      <div class="container">
+        <div class="admin-card glass-card">
+          <div class="admin-card-header">
+            <h2>📋 주문 대기열</h2>
+            <span class="badge" id="pending-count-badge">0</span>
+          </div>
+          <div id="order-queue" class="order-queue">
+            <!-- Filled by JS -->
+          </div>
+          <div id="empty-orders-msg" class="empty-state" style="display:none;">
+            <span class="empty-icon">📭</span>
+            <p>대기 중인 주문이 없습니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inventory Control -->
+    <section class="admin-section">
+      <div class="container">
+        <div class="admin-card glass-card">
+          <div class="admin-card-header">
+            <h2>📦 재고 관리</h2>
+          </div>
+
+          <!-- Add New Item -->
+          <div class="inventory-form">
+            <h3 class="form-subtitle">새 음료 추가</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="input-new-name" class="input-label">음료 이름</label>
+                <input type="text" id="input-new-name" class="text-input" placeholder="예: 코카콜라" />
+              </div>
+              <div class="form-group">
+                <label for="input-new-price" class="input-label">가격 (원)</label>
+                <input type="number" id="input-new-price" class="text-input" placeholder="1000" min="0" />
+              </div>
+              <div class="form-group">
+                <label for="input-new-stock" class="input-label">초기 재고</label>
+                <input type="number" id="input-new-stock" class="text-input" placeholder="10" min="0" />
+              </div>
+            </div>
+            <button id="btn-add-drink" class="btn btn-primary" onclick="addNewDrink()">➕ 음료 추가</button>
+          </div>
+
+          <!-- Existing Inventory -->
+          <div class="inventory-list-section">
+            <h3 class="form-subtitle">현재 재고 현황</h3>
+            <div id="inventory-list" class="inventory-list">
+              <!-- Filled by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer id="app-footer">
+    <p>© 2026 동아리 매점 · 음료 판매 & 재고 관리 시스템</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
