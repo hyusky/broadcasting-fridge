@@ -89,14 +89,17 @@
           <!-- Filled by JS -->
         </div>
 
-        <!-- Payment Button Section (hidden when price is 0) -->
+        <!-- Payment Info Section (hidden when price is 0) -->
         <div id="modal-pay-btn-section" class="transfer-instructions">
           <div class="transfer-box">
             <p class="transfer-title">송금 금액</p>
             <p class="transfer-amount" id="modal-transfer-amount"></p>
-            <button class="btn-pay-transfer" id="btn-transfer" type="button">
-              💸 토스/카카오페이로 송금하기
-            </button>
+            <div class="bank-info-block">
+              <p class="bank-info-label">입금 계좌</p>
+              <p class="bank-info-account" id="bank-account-text">토스뱅크 1002-0214-0999</p>
+              <p class="bank-info-holder">예금주: 왕*혁</p>
+              <button class="btn-copy-account" type="button" onclick="copyAccountNumber()">📋 계좌번호 복사</button>
+            </div>
             <p class="transfer-note">※ 입금자명을 주문자 이름과 동일하게 해주세요.</p>
           </div>
         </div>
